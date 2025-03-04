@@ -20,6 +20,8 @@ const Movie = db.define('Movie', {
 });
 
 
+app.use(express.urlencoded());
+
 nunjucks.configure('views', {
   autoescape: true,
   express: app
@@ -61,6 +63,37 @@ app.get('/movies', async (req, res) => {
   let movies = await Movie.findAll();
   
   res.render('movies/index.njk', { movies });
+});
+
+app.get('/movies/create', async (req, res) => {
+  res.render('movies/create.njk');
+});
+
+app.post('/movies', async (req, res) => {
+  await Movie.create(req.body);
+  res.redirect('/movies');
+});
+
+app.get('/movies/view', async (req, res) => {
+  let movie = await Movie.findByPk(req.query.id);
+  res.render('movies/view.njk', { movie });
+});
+
+app.get('/movies/edit', async (req, res) => {
+  let movie = await Movie.findByPk(req.query.id);
+  res.render('movies/edit.njk', { movie });
+});
+
+app.post('/movies/edit', async (req, res) => {
+  let movie = await Movie.findByPk(req.query.id);
+  await movie.update(req.body);
+  res.redirect('/movies');
+});
+
+app.get('/movies/delete', async (req, res) => {
+  let movie = await Movie.findByPk(req.query.id);
+  await movie.destroy();
+  res.redirect('/movies');
 });
 
 
