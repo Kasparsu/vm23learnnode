@@ -1,10 +1,9 @@
 import { Router } from "express";
 const router = Router();
-import db from '../../models/index.js';
+
 
 
 router.get("/", (req, res) => {
-    console.log(db);
     res.render("index.njk");
 });
 

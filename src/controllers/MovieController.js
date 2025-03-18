@@ -2,21 +2,8 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 import { Router } from "express";
 const router = Router();
+import db from '../../models/index.js';
 
-
-const db = new Sequelize({
-  dialect: 'sqlite',
-  storage: './db.sqlite'
-});
-
-const Movie = db.define('Movie', {
-  name: DataTypes.TEXT,
-  length: DataTypes.INTEGER,
-  description: DataTypes.TEXT,
-},
-{
-  timestamps: false
-});
 
 router.use('/movies', (req, res, next) => {
   if(req.session.user){
@@ -27,7 +14,7 @@ router.use('/movies', (req, res, next) => {
 });
 
 router.get("/movies", async (req, res) => {
-  let movies = await Movie.findAll();
+  let movies = await db.Movie.findAll();
 
   res.render("movies/index.njk", { movies });
 });
@@ -37,28 +24,28 @@ router.get("/movies/create", async (req, res) => {
 });
 
 router.post("/movies", async (req, res) => {
-  await Movie.create(req.body);
+  await db.Movie.create(req.body);
   res.redirect("/movies");
 });
 
 router.get("/movies/view", async (req, res) => {
-  let movie = await Movie.findByPk(req.query.id);
+  let movie = await db.Movie.findByPk(req.query.id);
   res.render("movies/view.njk", { movie });
 });
 
 router.get("/movies/edit", async (req, res) => {
-  let movie = await Movie.findByPk(req.query.id);
+  let movie = await db.Movie.findByPk(req.query.id);
   res.render("movies/edit.njk", { movie });
 });
 
 router.post("/movies/edit", async (req, res) => {
-  let movie = await Movie.findByPk(req.query.id);
+  let movie = await db.Movie.findByPk(req.query.id);
   await movie.update(req.body);
   res.redirect("/movies");
 });
 
 router.get("/movies/delete", async (req, res) => {
-  let movie = await Movie.findByPk(req.query.id);
+  let movie = await db.Movie.findByPk(req.query.id);
   await movie.destroy();
   res.redirect("/movies");
 });

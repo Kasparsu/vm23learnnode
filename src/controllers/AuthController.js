@@ -1,22 +1,7 @@
-import { Sequelize, DataTypes } from 'sequelize';
-
 import { Router } from "express";
 const router = Router();
 import bcrypt from "bcryptjs"
-
-const db = new Sequelize({
-  dialect: 'sqlite',
-  storage: './db.sqlite'
-});
-
-const User = db.define('User', {
-  name: DataTypes.TEXT,
-  email: DataTypes.TEXT,
-  password: DataTypes.TEXT,
-},
-{
-  timestamps: false
-});
+import db from '../../models/index.js';
 
 
 router.get("/register", (req, res) => {
@@ -31,7 +16,7 @@ router.post("/register", async (req, res) => {
         email: req.body.email,
         password: hash
     };
-    await User.create(data);
+    await db.User.create(data);
     res.redirect('/login');
 });
 
@@ -40,7 +25,7 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-    const user = await User.findOne({
+    const user = await db.User.findOne({
         where: {
             email: req.body.email
         }
