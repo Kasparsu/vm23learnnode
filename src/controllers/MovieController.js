@@ -18,7 +18,13 @@ const Movie = db.define('Movie', {
   timestamps: false
 });
 
-
+router.use('/movies', (req, res, next) => {
+  if(req.session.user){
+    next();
+  } else {
+    res.redirect('/login');
+  }
+});
 
 router.get("/movies", async (req, res) => {
   let movies = await Movie.findAll();
