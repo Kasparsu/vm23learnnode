@@ -15,6 +15,9 @@ export default {
       length: {
         type: Sequelize.INTEGER
       },
+      image: {
+        type: Sequelize.STRING
+      },
       description: {
         type: Sequelize.TEXT
       },

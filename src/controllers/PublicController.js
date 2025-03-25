@@ -1,10 +1,11 @@
 import { Router } from "express";
 const router = Router();
+import db from '../../models/index.js';
 
 
-
-router.get("/", (req, res) => {
-    res.render("index.njk");
+router.get("/", async (req, res) => {
+    const movies = await db.Movie.findAll();
+    res.render("index.njk", { movies });
 });
 
 router.get("/about", (req, res) => {
